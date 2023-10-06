@@ -19,34 +19,59 @@ let theme = createTheme({
             xs: 0,
             sm: 600,
             md: 650,
-            lg: 1200,
+            lg: 1150,
             xl: 1536,
         },
     },
     components: {
         MuiButton: {
             styleOverrides: {
-                root: {
+                root: ({ theme }) => ({
                     textTransform: 'capitalize',
+
+                    color: theme.palette.text.secondary,
+                    ':hover': {
+                        color: theme.palette.text.primary,
+                    },
+                }),
+            },
+        },
+        MuiPaper: {
+            styleOverrides: {
+                root: {
+                    boxShadow: '0px 0px 16px -4px hsla(0, 0%, 0%, 0.2)',
                 },
             },
         },
         MuiTab: {
             styleOverrides: {
-                root: {
+                root: ({ theme }) => ({
                     minWidth: 'auto',
+                    fontWeight: 700,
                     textTransform: 'capitalize',
-                },
+
+                    ':hover': {
+                        color: theme.palette.text.primary,
+                    },
+
+                    '&.Mui-selected:hover': {
+                        color: theme.palette.primary.main,
+                    },
+                }),
             },
         },
     },
     typography: {
         fontFamily: '"Josefin Sans", sans-serif',
-        fontSize: 15.75,
     },
     palette: {
         primary: {
             main: 'hsl(220, 98%, 61%)',
+        },
+        text: {
+            primary: 'hsl(235, 19%, 35%)',
+            secondary: 'hsl(236, 9%, 61%)',
+            disabled: 'hsl(233, 11%, 84%)',
         },
         background: {
             default: 'hsl(0, 0%, 98%)',
@@ -57,8 +82,6 @@ let theme = createTheme({
 theme = responsiveFontSizes(theme)
 
 function App() {
-    console.log(theme.breakpoints.up('md'))
-
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
@@ -68,7 +91,7 @@ function App() {
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
-                        rowGap: 2,
+                        rowGap: 2.5,
                         px: 3,
                     }}
                     component="main"
@@ -78,7 +101,13 @@ function App() {
 
                     <TodoList />
 
-                    <Paper>
+                    <Paper
+                        sx={{
+                            display: {
+                                sm: 'none',
+                            },
+                        }}
+                    >
                         <Filters />
                     </Paper>
                 </Container>

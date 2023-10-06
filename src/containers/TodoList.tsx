@@ -48,6 +48,7 @@ const TodoList = () => {
 
                 <ListItem
                     sx={{
+                        color: 'text.secondary',
                         justifyContent: 'space-between',
                     }}
                 >

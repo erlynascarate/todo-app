@@ -1,7 +1,7 @@
-import { Tab, Tabs } from '@mui/material'
 import { SyntheticEvent } from 'react'
-import { filters, updateFilter } from '../features/filter/filterSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import { Tab, Tabs } from '@mui/material'
+import { filters, updateFilter } from '../features/filter/filterSlice'
 import { RootState } from '../app/store'
 
 type FiltersProps = {
@@ -21,10 +21,10 @@ const Filters = (props: FiltersProps) => {
 
     return (
         <Tabs
+            onChange={handleChange}
             sx={{
                 display,
             }}
-            onChange={handleChange}
             value={filter}
             centered
             TabIndicatorProps={{

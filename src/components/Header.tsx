@@ -1,15 +1,16 @@
-import { SyntheticEvent } from 'react'
+import { BaseSyntheticEvent } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { Box, IconButton, Stack, TextField, Typography } from '@mui/material'
-import { DarkMode } from '@mui/icons-material'
+import { IconButton, Stack, OutlinedInput, Typography } from '@mui/material'
+import DarkMode from '@mui/icons-material/DarkMode'
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 
 import { addTodo } from '../features/todoList/todoListSlice'
 
 const Header = () => {
     const dispach = useDispatch()
 
-    const handleSubmit = (event: SyntheticEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: BaseSyntheticEvent) => {
         event.preventDefault()
 
         const form = event.target
@@ -19,40 +20,52 @@ const Header = () => {
 
         form.reset()
     }
+
     return (
         <Stack onSubmit={handleSubmit} component="form">
             <Stack
                 sx={{
                     flexDirection: 'row',
+                    justifyContent: 'space-between',
                     alignItems: 'center',
                     py: 4,
                 }}
             >
-                <Typography variant="h3">TODO</Typography>
-
-                <Box
+                <Typography
                     sx={{
-                        flexGrow: 1,
+                        fontWeight: 700,
+                        letterSpacing: 12,
                     }}
-                />
+                    component="h1"
+                    color="common.white"
+                    variant="h3"
+                >
+                    TODO
+                </Typography>
 
-                <IconButton>
+                <IconButton sx={{ color: 'common.white' }}>
                     <DarkMode />
                 </IconButton>
             </Stack>
 
-            <TextField
+            <OutlinedInput
                 sx={{
-                    '& .MuiInputBase-root': {
-                        bgcolor: 'background.paper',
-                    },
+                    bgcolor: 'background.paper',
                 }}
+                autoComplete="off"
                 placeholder="Create a new todo..."
                 name="name"
-                required
                 inputProps={{
                     minLength: 3,
                 }}
+                startAdornment={
+                    <RadioButtonUncheckedIcon
+                        sx={{
+                            mr: 1,
+                            color: 'text.disabled',
+                        }}
+                    />
+                }
             />
         </Stack>
     )

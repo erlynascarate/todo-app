@@ -6,11 +6,13 @@ const Footer = () => {
             sx={{
                 justifyContent: 'center',
                 alignItems: 'center',
-                py: 5,
+                py: { xs: 5, lg: 6 },
             }}
             component="footer"
         >
-            <Typography>Drag and drop to reorder list</Typography>
+            <Typography color="text.secondary">
+                Drag and drop to reorder list
+            </Typography>
         </Stack>
     )
 }
