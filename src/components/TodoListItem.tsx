@@ -47,6 +47,7 @@ const TodoListItem = (props: TodoListItemProps) => {
             <ListItemButton onClick={handleCheck}>
                 <Checkbox
                     sx={{
+                        mr: { md: 0.5 },
                         color: 'text.disabled',
                     }}
                     checked={checked}

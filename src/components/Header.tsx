@@ -1,14 +1,18 @@
 import { BaseSyntheticEvent } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { IconButton, Stack, OutlinedInput, Typography } from '@mui/material'
+import LightMode from '@mui/icons-material/LightMode'
 import DarkMode from '@mui/icons-material/DarkMode'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
 
 import { addTodo } from '../features/todoList/todoListSlice'
+import { toggleMode } from '../features/mode/modeSlice'
+import { RootState } from '../app/store'
 
 const Header = () => {
-    const dispach = useDispatch()
+    const dispatch = useDispatch()
+    const mode = useSelector((state: RootState) => state.mode)
 
     const handleSubmit = (event: BaseSyntheticEvent) => {
         event.preventDefault()
@@ -16,10 +20,12 @@ const Header = () => {
         const form = event.target
         const name = form.name.value
 
-        dispach(addTodo(name))
+        dispatch(addTodo(name))
 
         form.reset()
     }
+
+    const handleClick = () => dispatch(toggleMode())
 
     return (
         <Stack onSubmit={handleSubmit} component="form">
@@ -43,8 +49,12 @@ const Header = () => {
                     TODO
                 </Typography>
 
-                <IconButton sx={{ color: 'common.white' }}>
-                    <DarkMode />
+                <IconButton
+                    onClick={handleClick}
+                    sx={{ color: 'common.white' }}
+                >
+                    {mode === 'light' && <DarkMode />}
+                    {mode === 'dark' && <LightMode />}
                 </IconButton>
             </Stack>
 
@@ -61,7 +71,7 @@ const Header = () => {
                 startAdornment={
                     <RadioButtonUncheckedIcon
                         sx={{
-                            mr: 1,
+                            mr: { xs: 1, md: 1.5 },
                             color: 'text.disabled',
                         }}
                     />

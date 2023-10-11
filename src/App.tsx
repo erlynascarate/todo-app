@@ -1,7 +1,9 @@
+import { useSelector } from 'react-redux'
 import {
     Container,
     createTheme,
     CssBaseline,
+    PaletteMode,
     Paper,
     responsiveFontSizes,
     ThemeProvider,
@@ -12,6 +14,40 @@ import Header from './components/Header'
 import TodoList from './containers/TodoList'
 import Filters from './components/Filters'
 import Footer from './components/Footer'
+
+import { RootState } from './app/store'
+
+const getDesignTokens = (mode: PaletteMode) => ({
+    palette: {
+        mode,
+        primary: {
+            main: 'hsl(220, 98%, 61%)',
+        },
+        ...(mode === 'light'
+            ? {
+                  text: {
+                      primary: 'hsl(235, 19%, 35%)',
+                      secondary: 'hsl(236, 9%, 61%)',
+                      disabled: 'hsl(233, 11%, 84%)',
+                  },
+                  background: {
+                      default: 'hsl(0, 0%, 98%)',
+                      paper: 'hsl(0, 0%, 100%)',
+                  },
+              }
+            : {
+                  text: {
+                      primary: 'hsl(234, 39%, 85%)',
+                      secondary: 'hsl(234, 11%, 52%)',
+                      disabled: 'hsl(233, 14%, 35%)',
+                  },
+                  background: {
+                      default: 'hsl(235, 21%, 11%)',
+                      paper: 'hsl(235, 24%, 19%)',
+                  },
+              }),
+    },
+})
 
 let theme = createTheme({
     breakpoints: {
@@ -64,27 +100,18 @@ let theme = createTheme({
     typography: {
         fontFamily: '"Josefin Sans", sans-serif',
     },
-    palette: {
-        primary: {
-            main: 'hsl(220, 98%, 61%)',
-        },
-        text: {
-            primary: 'hsl(235, 19%, 35%)',
-            secondary: 'hsl(236, 9%, 61%)',
-            disabled: 'hsl(233, 11%, 84%)',
-        },
-        background: {
-            default: 'hsl(0, 0%, 98%)',
-        },
-    },
 })
 
 theme = responsiveFontSizes(theme)
 
 function App() {
+    const mode = useSelector((state: RootState) => state.mode)
+
+    theme = createTheme(theme, getDesignTokens(mode))
+
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
+            <CssBaseline enableColorScheme />
 
             <Layout>
                 <Container
