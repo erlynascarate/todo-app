@@ -1,50 +1,38 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { PayloadAction, createSlice } from '@reduxjs/toolkit'
+import {
+    deleteData,
+    todoListData,
+    updateData,
+} from '../../indexedDB/todoListDB'
 
-const initialState = [
-    {
-        id: crypto.randomUUID(),
-        name: 'Complete online JavaScript course',
-        checked: false,
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'Jog around the park 3x',
-        checked: false,
-    },
-    {
-        id: crypto.randomUUID(),
-        name: '10 minutes meditation',
-        checked: false,
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'Read for 1 hour',
-        checked: false,
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'Pick up groceries',
-        checked: false,
-    },
-    {
-        id: crypto.randomUUID(),
-        name: 'Complete Todo App on Frontend Mentor',
-        checked: false,
-    },
-]
+const initialState = todoListData
 
 const todoListSlice = createSlice({
     name: 'todoList',
     initialState,
     reducers: {
-        addTodo: (state, action) => {
+        addTodo: (state, action: PayloadAction<string>) => {
             const newTodo = {
                 id: crypto.randomUUID(),
                 name: action.payload,
                 checked: false,
+                index: 0,
             }
 
             state.unshift(newTodo)
+
+            state.forEach((stateTodo, index) => {
+                const { id, name, checked } = stateTodo
+
+                const todo = {
+                    id,
+                    name,
+                    checked,
+                    index,
+                }
+
+                updateData(todo)
+            })
         },
         removeTodo: (state, action) => {
             const id = action.payload
@@ -55,6 +43,7 @@ const todoListSlice = createSlice({
                 const index = state.indexOf(foundTodo)
 
                 state.splice(index, 1)
+                deleteData(id)
             }
         },
         check: (state, action) => {
@@ -64,10 +53,29 @@ const todoListSlice = createSlice({
 
             if (foundTodo) {
                 foundTodo.checked = !foundTodo.checked
+
+                const { id, name, checked, index } = foundTodo
+
+                const updatedTodo = {
+                    id,
+                    name,
+                    checked,
+                    index,
+                }
+
+                updateData(updatedTodo)
             }
         },
         clearCompleted: (state) => {
-            return state.filter((todo) => todo.checked === false)
+            const clearedList = state.filter((todo) => {
+                if (todo.checked) {
+                    deleteData(todo.id)
+                } else {
+                    return true
+                }
+            })
+
+            return clearedList
         },
     },
 })

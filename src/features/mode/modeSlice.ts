@@ -1,11 +1,18 @@
-import { PaletteMode } from '@mui/material'
 import { createSlice } from '@reduxjs/toolkit'
+import { initialTheme, updateTheme } from '../../indexedDB/todoListDB'
+
+const initialState = initialTheme
 
 const modeSlice = createSlice({
     name: 'mode',
-    initialState: 'dark' as PaletteMode,
+    initialState,
     reducers: {
-        toggleMode: (state) => (state === 'light' ? 'dark' : 'light'),
+        toggleMode: (state) => {
+            const mode = state === 'light' ? 'dark' : 'light'
+
+            updateTheme(mode)
+            return mode
+        },
     },
 })
 
