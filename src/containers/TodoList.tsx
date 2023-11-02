@@ -1,4 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux'
+import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd'
+import { TransitionGroup } from 'react-transition-group'
 import {
     Button,
     Collapse,
@@ -10,8 +12,7 @@ import {
 import TodoListItem from '../components/TodoListItem'
 import Filters from '../components/Filters'
 import { RootState } from '../app/store'
-import { clearCompleted } from '../features/todoList/todoListSlice'
-import { TransitionGroup } from 'react-transition-group'
+import { clearCompleted, reorder } from '../features/todoList/todoListSlice'
 
 const TodoList = () => {
     const dispatch = useDispatch()
@@ -35,30 +36,56 @@ const TodoList = () => {
 
     const handleClick = () => dispatch(clearCompleted())
 
+    const handleDragEnd = (result: DropResult) => {
+        const { source, destination } = result
+        if (!destination || source.index === destination.index) return
+
+        dispatch(
+            reorder({ startIndex: source.index, endIndex: destination.index })
+        )
+    }
+
     return (
         <Paper>
-            <List disablePadding>
-                <TransitionGroup>
-                    {filteredTodoList.map((todo) => (
-                        <Collapse key={todo.id}>
-                            <TodoListItem todo={todo} />
-                        </Collapse>
-                    ))}
-                </TransitionGroup>
+            <DragDropContext onDragEnd={handleDragEnd}>
+                <Droppable droppableId="todoList">
+                    {(provided) => (
+                        <List
+                            disablePadding
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                        >
+                            <TransitionGroup>
+                                {filteredTodoList.map((todo, index) => (
+                                    <Collapse key={todo.id}>
+                                        <TodoListItem
+                                            index={index}
+                                            todo={todo}
+                                        />
+                                    </Collapse>
+                                ))}
 
-                <ListItem
-                    sx={{
-                        color: 'text.secondary',
-                        justifyContent: 'space-between',
-                    }}
-                >
-                    <Typography>{itemsLeft} items left</Typography>
+                                {provided.placeholder}
+                            </TransitionGroup>
 
-                    <Filters inside />
+                            <ListItem
+                                sx={{
+                                    color: 'text.secondary',
+                                    justifyContent: 'space-between',
+                                }}
+                            >
+                                <Typography>{itemsLeft} items left</Typography>
 
-                    <Button onClick={handleClick}>Clear Completed</Button>
-                </ListItem>
-            </List>
+                                <Filters inside />
+
+                                <Button onClick={handleClick}>
+                                    Clear Completed
+                                </Button>
+                            </ListItem>
+                        </List>
+                    )}
+                </Droppable>
+            </DragDropContext>
         </Paper>
     )
 }

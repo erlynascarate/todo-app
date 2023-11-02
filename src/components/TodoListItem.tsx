@@ -1,4 +1,5 @@
 import { useDispatch } from 'react-redux'
+import { Draggable } from 'react-beautiful-dnd'
 import {
     Checkbox,
     IconButton,
@@ -13,6 +14,7 @@ import ClearIcon from '@mui/icons-material/Clear'
 import { check, removeTodo } from '../features/todoList/todoListSlice'
 
 type TodoListItemProps = {
+    index: number
     todo: {
         id: `${string}-${string}-${string}-${string}-${string}`
         name: string
@@ -21,7 +23,7 @@ type TodoListItemProps = {
 }
 
 const TodoListItem = (props: TodoListItemProps) => {
-    const { todo } = props
+    const { index, todo } = props
     const { id, checked, name } = todo
 
     const dispatch = useDispatch()
@@ -30,55 +32,67 @@ const TodoListItem = (props: TodoListItemProps) => {
     const handleCheck = () => dispatch(check(id))
 
     return (
-        <ListItem
-            divider
-            disablePadding
-            secondaryAction={
-                <IconButton
-                    onClick={handleClick}
+        <Draggable draggableId={id} index={index}>
+            {(provided) => (
+                <ListItem
                     sx={{
-                        color: 'text.secondary',
+                        bgcolor: 'background.paper',
                     }}
-                >
-                    <ClearIcon />
-                </IconButton>
-            }
-        >
-            <ListItemButton onClick={handleCheck}>
-                <Checkbox
-                    sx={{
-                        mr: { md: 0.5 },
-                        color: 'text.disabled',
-                    }}
-                    checked={checked}
-                    edge="start"
-                    icon={<RadioButtonUncheckedIcon />}
-                    checkedIcon={
-                        <DoneIcon
+                    divider
+                    disablePadding
+                    secondaryAction={
+                        <IconButton
+                            onClick={handleClick}
                             sx={{
-                                borderRadius: '50%',
-                                p: 0.45,
-                                color: 'common.white',
-                                background:
-                                    'linear-gradient(135deg,hsl(192, 100%, 67%), hsl(280, 87%, 65%))',
+                                color: 'text.secondary',
                             }}
-                        />
+                        >
+                            <ClearIcon />
+                        </IconButton>
                     }
-                />
-                <ListItemText
-                    sx={{
-                        '::first-letter': { textTransform: 'uppercase' },
-                        overflowWrap: 'anywhere',
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                >
+                    <ListItemButton onClick={handleCheck}>
+                        <Checkbox
+                            sx={{
+                                mr: { md: 0.5 },
+                                color: 'text.disabled',
+                            }}
+                            checked={checked}
+                            edge="start"
+                            icon={<RadioButtonUncheckedIcon />}
+                            checkedIcon={
+                                <DoneIcon
+                                    sx={{
+                                        borderRadius: '50%',
+                                        p: 0.45,
+                                        color: 'common.white',
+                                        background:
+                                            'linear-gradient(135deg,hsl(192, 100%, 67%), hsl(280, 87%, 65%))',
+                                    }}
+                                />
+                            }
+                        />
+                        <ListItemText
+                            sx={{
+                                '::first-letter': {
+                                    textTransform: 'uppercase',
+                                },
+                                overflowWrap: 'anywhere',
 
-                        ...(checked && {
-                            color: 'text.secondary',
-                            textDecoration: 'line-through',
-                        }),
-                    }}
-                    primary={name}
-                />
-            </ListItemButton>
-        </ListItem>
+                                ...(checked && {
+                                    color: 'text.secondary',
+                                    textDecoration: 'line-through',
+                                }),
+                            }}
+                            primary={name}
+                        />
+                    </ListItemButton>
+                </ListItem>
+            )}
+        </Draggable>
     )
 }
 

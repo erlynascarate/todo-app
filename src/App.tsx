@@ -75,6 +75,7 @@ let theme = createTheme({
         MuiPaper: {
             styleOverrides: {
                 root: {
+                    backgroundImage: 'none',
                     boxShadow: '0px 0px 16px -4px hsla(0, 0%, 0%, 0.2)',
                 },
             },

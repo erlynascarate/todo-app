@@ -34,6 +34,18 @@ const todoListSlice = createSlice({
                 updateData(todo)
             })
         },
+        reorder: (state, action) => {
+            const { startIndex, endIndex } = action.payload
+
+            const [removed] = state.splice(startIndex, 1)
+            state.splice(endIndex, 0, removed)
+
+            state.forEach((todo, index) => {
+                if (todo.index !== index) {
+                    updateData({ ...todo, index })
+                }
+            })
+        },
         removeTodo: (state, action) => {
             const id = action.payload
 
@@ -80,7 +92,7 @@ const todoListSlice = createSlice({
     },
 })
 
-export const { addTodo, removeTodo, check, clearCompleted } =
+export const { addTodo, removeTodo, reorder, check, clearCompleted } =
     todoListSlice.actions
 
 export default todoListSlice.reducer
