@@ -6,6 +6,7 @@ import {
     ListItem,
     ListItemButton,
     ListItemText,
+    Tooltip,
 } from '@mui/material'
 import DoneIcon from '@mui/icons-material/Done'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
@@ -41,14 +42,16 @@ const TodoListItem = (props: TodoListItemProps) => {
                     divider
                     disablePadding
                     secondaryAction={
-                        <IconButton
-                            onClick={handleClick}
-                            sx={{
-                                color: 'text.secondary',
-                            }}
-                        >
-                            <ClearIcon />
-                        </IconButton>
+                        <Tooltip title="Delete todo">
+                            <IconButton
+                                onClick={handleClick}
+                                sx={{
+                                    color: 'text.secondary',
+                                }}
+                            >
+                                <ClearIcon />
+                            </IconButton>
+                        </Tooltip>
                     }
                     ref={provided.innerRef}
                     {...provided.draggableProps}

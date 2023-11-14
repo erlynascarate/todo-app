@@ -1,7 +1,13 @@
 import { BaseSyntheticEvent } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { IconButton, Stack, OutlinedInput, Typography } from '@mui/material'
+import {
+    IconButton,
+    Stack,
+    OutlinedInput,
+    Typography,
+    Tooltip,
+} from '@mui/material'
 import LightMode from '@mui/icons-material/LightMode'
 import DarkMode from '@mui/icons-material/DarkMode'
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked'
@@ -49,13 +55,15 @@ const Header = () => {
                     TODO
                 </Typography>
 
-                <IconButton
-                    onClick={handleClick}
-                    sx={{ color: 'common.white' }}
-                >
-                    {mode === 'light' && <DarkMode />}
-                    {mode === 'dark' && <LightMode />}
-                </IconButton>
+                <Tooltip title="Toggle light and dark mode">
+                    <IconButton
+                        onClick={handleClick}
+                        sx={{ color: 'common.white' }}
+                    >
+                        {mode === 'light' && <DarkMode />}
+                        {mode === 'dark' && <LightMode />}
+                    </IconButton>
+                </Tooltip>
             </Stack>
 
             <OutlinedInput
