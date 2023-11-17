@@ -21,17 +21,10 @@ const todoListSlice = createSlice({
 
             state.unshift(newTodo)
 
-            state.forEach((stateTodo, index) => {
-                const { id, name, checked } = stateTodo
+            state.forEach((todo, index) => {
+                todo.index = index
 
-                const todo = {
-                    id,
-                    name,
-                    checked,
-                    index,
-                }
-
-                updateData(todo)
+                updateData({ ...todo })
             })
         },
         reorder: (state, action) => {
@@ -42,7 +35,9 @@ const todoListSlice = createSlice({
 
             state.forEach((todo, index) => {
                 if (todo.index !== index) {
-                    updateData({ ...todo, index })
+                    todo.index = index
+
+                    updateData({ ...todo })
                 }
             })
         },
